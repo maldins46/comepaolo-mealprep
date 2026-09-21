@@ -1,0 +1,13 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Se in futuro aggiungi tooling Node (non richiesto per usare index.html)
+node_modules/
+dist/
+.env
