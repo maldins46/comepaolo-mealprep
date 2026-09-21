@@ -8,10 +8,12 @@ and macros, and produces the corresponding shopping list.
 
 ## Usage
 
-Just open `index.html` in a browser. No server needed: it also works by
-opening the file directly from the filesystem (`file://...`).
+Live at **https://maldins46.github.io/comepaolo-mealprep/** — open it and,
+on a phone, use "Add to Home Screen" / the browser's install prompt to
+install it like an app (see [Install](#install) below).
 
-To publish it online, see [Deploy](#deploy) below.
+It also runs with no server at all: open `index.html` directly from the
+filesystem (`file://...`).
 
 ## Features
 
@@ -38,6 +40,9 @@ To publish it online, see [Deploy](#deploy) below.
 - **Saved weeks**: local save in the browser (localStorage), to resume or
   reuse a week later.
 - **Print**: dedicated layout for printing the plan and list.
+- **Installable (PWA)**: has a manifest, a service worker, and an icon
+  set, so it can be installed on a phone or desktop and opened offline
+  like a native app.
 
 ## Stack
 
@@ -52,16 +57,24 @@ first ~350 lines of `index.html`, in the `FOODS`, `TPL` (recipe templates),
 `SNACKS`, `PROTS`, etc. objects. To adapt the tool to a different plan,
 just edit these objects: the UI adjusts on its own.
 
+## Install
+
+Open the [live site](https://maldins46.github.io/comepaolo-mealprep/) and:
+
+- **iOS Safari**: Share → Add to Home Screen.
+- **Android Chrome**: menu → Install app (or the install banner).
+- **Desktop Chrome/Edge**: install icon in the address bar.
+
+Once installed it opens full-screen with its own icon, and the service
+worker caches the app shell so it keeps working offline.
+
 ## Deploy
 
-Any static hosting works, for example:
-
-**GitHub Pages**
-1. Settings → Pages → Deploy from a branch → branch `main`, folder `/root`.
-2. The page will be at `https://<user>.github.io/<repo>/`.
-
-**Netlify Drop**
-Drag the folder onto https://app.netlify.com/drop.
+Published on **GitHub Pages**, serving from the `main` branch root — see
+[Usage](#usage) for the live URL. Since it's a static single file with no
+build step, any other static host works too (Netlify, Vercel, a plain
+`gh-pages` branch, etc.); all asset paths are relative, so it also works
+fine from a subpath rather than a domain root.
 
 ## Privacy
 
@@ -72,5 +85,4 @@ they don't see your plan.
 
 ## License
 
-Personal use. Add a license (e.g. MIT) if you want to make the repo
-public and reusable by others.
+MIT — see [LICENSE](LICENSE).
