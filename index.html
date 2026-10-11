@@ -313,6 +313,7 @@ const FOODS={
   riso:{n:'Riso basmati',c:'dispensa',v:[350,7,78,.6]},
   pasta:{n:'Pasta integrale (formato corto)',c:'dispensa',v:[340,13,64,2.5]},
   pastaprot:{n:'Pasta proteica (di legumi)',c:'dispensa',v:[335,25,42,3.5]},
+  noodles:{n:'Spaghetti di riso',c:'dispensa',v:[360,6,80,.6]},
   farro:{n:'Farro',c:'dispensa',v:[335,15,67,2.5]},
   orzo:{n:'Orzo perlato',c:'dispensa',v:[350,10,72,1.5]},
   quinoa:{n:'Quinoa',c:'dispensa',v:[365,14,64,6]},
@@ -338,14 +339,14 @@ Object.entries(VEGS).forEach(([k,n])=>{FOODS[k]={n,c:'verdura',v:[25,2,4,.3]}});
 
 const CATS=[['carne','Carne e pesce'],['frigo','Frigo'],['verdura','Frutta e verdura'],['surgelati','Surgelati'],['pane','Pane'],['dispensa','Dispensa'],['aromi','Aromi e spezie']];
 const AROMI={curry:'Curry',paprika:'Paprika',limone:'Limone',prezzemolo:'Prezzemolo',rosmarino:'Rosmarino',curcuma:'Curcuma',pepe:'Pepe nero',aglio:'Aglio',origano:'Origano',cannella:'Cannella',cacao:'Cacao amaro',zenzero:'Zenzero fresco',vaniglia:'Vaniglia'};
-const SPICES={'':[],'Curry':['curry'],'Paprika':['paprika'],'Limone + prezzemolo':['limone','prezzemolo'],'Rosmarino':['rosmarino'],'Curcuma + pepe nero':['curcuma','pepe'],'Aglio + origano':['aglio','origano']};
+const SPICES={'':[],'Curry':['curry'],'Paprika':['paprika'],'Limone + prezzemolo':['limone','prezzemolo'],'Rosmarino':['rosmarino'],'Curcuma + pepe nero':['curcuma','pepe'],'Aglio + origano':['aglio','origano'],'Zenzero + aglio':['zenzero','aglio']};
 const METHODS=['In padella','Al forno','Al vapore','Alla griglia','Crudo / insalata','Saltato in wok'];
 const PROTS={pollo:'Pollo',tacchino:'Tacchino',manzo:'Manzo magro',lonza:'Lonza di maiale',salmone:'Salmone',merluzzo:'Pesce bianco',orata:'Orata o branzino',tonno:'Tonno fresco',gamberi:'Gamberi',tofu:'Tofu',tempeh:'Tempeh',seitan:'Seitan',uova:'Uova',uovafeta:'Uova e feta',tonnoscatola:'Tonno in scatola',ceci:'Ceci',lenticchie:'Lenticchie',fagioli:'Fagioli',edamame:'Edamame'};
 const FRESH_OPTS=['pollo','tacchino','manzo','lonza','salmone','merluzzo','orata','tonno','gamberi','tofu','tempeh','seitan'];
 // porzione a crudo pensata per ~35-45 g di proteine, come 150-180 g di pollo cotto
 const PORTION={pollo:220,tacchino:220,manzo:200,lonza:200,salmone:200,merluzzo:220,orata:220,tonno:180,gamberi:250,tofu:250,tempeh:180,seitan:180};
 const FISH=['salmone','merluzzo','orata','tonno','gamberi','tonnoscatola'],MEAT=['pollo','tacchino','manzo','lonza'],VEGPROT=['tofu','tempeh','seitan'];
-const CARBS={riso:'Riso basmati',pasta:'Pasta integrale',pastaprot:'Pasta proteica',farro:'Farro',orzo:'Orzo',quinoa:'Quinoa',couscous:'Couscous',patate:'Patate',pane:'Pane integrale'};
+const CARBS={riso:'Riso basmati',pasta:'Pasta integrale',pastaprot:'Pasta proteica',noodles:'Spaghetti di riso',farro:'Farro',orzo:'Orzo',quinoa:'Quinoa',couscous:'Couscous',patate:'Patate',pane:'Pane integrale'};
 const BATCH_CARBS=['riso','farro','orzo','quinoa','pasta','pastaprot','couscous'];
 const LIQUIDS={latte:'Latte',soia:'Bevanda di soia',avenadrink:"Bevanda d'avena",yogurtdil:'Yogurt diluito con acqua',cocco:'Acqua di cocco'};
 const FRUIT_SHORT={banana:'banana',bosco:'frutti di bosco',mango:'mango',kiwi:'kiwi',pera:'pera',mela:'mela',pesca:'pesca',papaya:'papaya',avocado:'avocado',ananas:'ananas',uva:'uva',arancia:'arancia',fragole:'fragole',anguria:'anguria o melone'};
@@ -393,17 +394,18 @@ const TPL={
   c19:{t:()=>'Insalata di farro, fagioli e finocchio al limone',p:'fagioli',carb:'farro',veg:['finocchio','rucola'],m:'Crudo / insalata',s:'Limone + prezzemolo',note:'Buona anche fredda'},
   c20:{t:()=>'Riso saltato con edamame, funghi e bietole',p:'edamame',carb:'riso',veg:['funghi','bietole'],m:'In padella',s:'Aglio + origano'},
   c21:{t:()=>'Uova al forno con cavolfiore e patate',p:'uova',carb:'patate',veg:['cavolfiore'],m:'Al forno',s:'Paprika'},
+  r3:{t:P=>`Spaghetti di riso in wok con ${P.toLowerCase()}, peperoni e carote`,p:'FRESH',carb:'noodles',veg:['peperoni','carote'],m:'Saltato in wok',s:'Zenzero + aglio'},
   r1:{t:P=>`Pasta con ${P.toLowerCase()}, pomodorini, aglio e origano`,p:'FRESH',carb:'pasta',veg:['pomodorini','rucola'],m:'In padella',s:'Aglio + origano'},
   r2:{t:P=>`Riso saltato in wok con ${P.toLowerCase()} e verdure`,p:'FRESH',carb:'riso',veg:['peperoni','carote'],m:'Saltato in wok',s:'Curcuma + pepe nero'},
 };
 const DINNER_MAIN=['d1','d2','d3','d4','d5','d6'];
-const DINNER_ALT=['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c14','c15','c16','c17','c18','c20','c21','r1','r2'];
+const DINNER_ALT=['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c14','c15','c16','c17','c18','c20','c21','r1','r2','r3'];
 const LUNCH_READY=['c2','c4','c5','c6','c7','c13','c14','c16','c19','c20'];
 // riferimento per il pasto libero: pizza diavola, una porzione di patatine e una birra media
 const FREE_MEAL={n:[1700,50,175,75],d:'Riferimento: pizza diavola, patatine e una birra media'};
 const OFFICE_MEAL={n:[850,35,110,25],d:'Riferimento: pizza romana sottile con verdure o bresaola, un contorno prima'};
-const POSTRUN=['r1','r2','c4'];
-const TPL_GROUPS=[['Le 6 cene veloci',DINNER_MAIN],['Combinazioni pronte',['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c15','c16','c17','c18','c20','c21']],['Da portare in ufficio (buone anche fredde)',['c6','c13','c14','c19']],['Carbo pieno, ottime dopo la corsa',['r1','r2']]];
+const POSTRUN=['r1','r2','r3','c4'];
+const TPL_GROUPS=[['Le 6 cene veloci',DINNER_MAIN],['Combinazioni pronte',['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c15','c16','c17','c18','c20','c21']],['Da portare in ufficio (buone anche fredde)',['c6','c13','c14','c19']],['Carbo pieno, ottime dopo la corsa',['r1','r2','r3']]];
 
 const ICON={
   grip:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><g fill="currentColor"><circle cx="5" cy="3" r="1.4"/><circle cx="11" cy="3" r="1.4"/><circle cx="5" cy="8" r="1.4"/><circle cx="11" cy="8" r="1.4"/><circle cx="5" cy="13" r="1.4"/><circle cx="11" cy="13" r="1.4"/></g></svg>'
@@ -857,7 +859,7 @@ function itemNote(id,a,days){
   if(id==='ceci'||id==='fagioli')return `${fmtN(a)} g sgocciolati (${base})`;
   if(id==='edamame')return `Surgelati: durano mesi (${base})`;
   if(id==='lenticchie')return `A crudo, circa 80 g a porzione (${base})`;
-  if(['riso','pasta','pastaprot','farro','orzo','quinoa','couscous'].includes(id))return `A crudo, controlla prima la dispensa (${base})`;
+  if(['riso','pasta','pastaprot','noodles','farro','orzo','quinoa','couscous'].includes(id))return `A crudo, controlla prima la dispensa (${base})`;
   if(id==='olio')return 'Un cucchiaio a pasto, controlla la bottiglia';
   if(id==='bosco'||id==='mango')return `Surgelati: durano mesi (${base})`;
   return base;
