@@ -107,6 +107,9 @@ select,input[type="date"],input[type="text"]{padding:7px 10px;border:1.5px solid
 .tag.train{border-color:var(--basil);color:var(--basil)}
 .nut{margin-top:7px;font-size:.78rem;color:var(--muted);line-height:1.35}
 .nut b{color:var(--ink)}
+.mrow{text-align:left}
+.mrow .bar{margin:2px 0 4px}
+.nut .stat{display:block;text-align:left}
 .plow,.plow b{color:var(--high)}
 .bar{height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin:4px 0 3px;border:1px solid var(--line)}
 .bar i{display:block;height:100%}
@@ -146,7 +149,7 @@ select,input[type="date"],input[type="text"]{padding:7px 10px;border:1.5px solid
   .day{grid-template-columns:1fr}
   .slots{grid-template-columns:repeat(2,minmax(0,1fr))}
   .dayhead{display:grid;grid-template-columns:1fr auto;gap:0 10px;align-items:start}
-  .nut{margin-top:0;text-align:right;min-width:120px}
+  .nut{margin-top:0;min-width:170px}
   .tags{grid-column:1/-1}
   .settings{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .settings .field:first-child{grid-column:1/-1}
@@ -272,70 +275,70 @@ const SHORT=['lun','mar','mer','gio','ven','sab','dom'];
 const SLOTS=['b','l','s','d'];
 const SLOT_LABEL={b:'Colazione',l:'Pranzo',s:'Merenda',d:'Cena'};
 
-// valori per 100 g/ml (o per pezzo se u:'pz'): [kcal, proteine, carbo, grassi]
+// valori per 100 g/ml (o per pezzo se u:'pz'): [kcal, proteine, carbo, grassi, fibre]
 const FOODS={
-  pollo:{n:'Petto di pollo',c:'carne',v:[110,23,0,1.5]},
-  tacchino:{n:'Fesa di tacchino',c:'carne',v:[107,24,0,1]},
-  salmone:{n:'Salmone',c:'carne',v:[200,20,0,13]},
-  merluzzo:{n:'Pesce bianco (merluzzo)',c:'carne',v:[80,18,0,.7]},
-  manzo:{n:'Manzo magro (fesa o macinato magro)',c:'carne',v:[130,21,0,5]},
-  lonza:{n:'Lonza di maiale',c:'carne',v:[145,21,0,6.5]},
-  orata:{n:'Filetti di orata o branzino',c:'carne',v:[120,20,0,4.5]},
-  tonno:{n:'Tonno fresco',c:'carne',v:[110,23,0,1.5]},
-  gamberi:{n:'Gamberi o gamberetti',c:'carne',v:[80,18,0,1]},
-  tofu:{n:'Tofu compatto',c:'frigo',v:[140,14,2,8]},
-  tempeh:{n:'Tempeh',c:'frigo',v:[192,19,9,11]},
-  seitan:{n:'Seitan',c:'frigo',v:[120,25,4,2]},
-  uova:{n:'Uova',c:'frigo',u:'pz',v:[85,7.5,.4,6]},
-  feta:{n:'Feta',c:'frigo',v:[260,15,1,21]},
-  skyr:{n:'Yogurt greco 0% o skyr',c:'frigo',v:[60,10.5,4,.2]},
-  latte:{n:'Latte parzialmente scremato',c:'frigo',u:'ml',v:[46,3.3,5,1.6]},
-  ricotta:{n:'Fiocchi di latte o ricotta magra',c:'frigo',v:[85,11,3,3]},
-  hummus:{n:'Hummus',c:'frigo',v:[180,7,14,11]},
-  banana:{n:'Banane',c:'verdura',v:[89,1.1,23,.3]},
-  kiwi:{n:'Kiwi',c:'verdura',v:[61,1.1,15,.5]},
-  pera:{n:'Pere',c:'verdura',v:[57,.4,15,.1]},
-  mela:{n:'Mele',c:'verdura',v:[52,.3,14,.2]},
-  pesca:{n:'Pesche o albicocche',c:'verdura',v:[39,.9,10,.3]},
-  papaya:{n:'Papaya',c:'verdura',v:[43,.5,11,.3]},
-  avocado:{n:'Avocado',c:'verdura',v:[160,2,9,15]},
-  frutto:{n:'Frutta di stagione (merende)',c:'verdura',v:[55,.7,13,.2]},
-  uva:{n:'Uva',c:'verdura',v:[69,.7,18,.2]},
-  arancia:{n:'Arance o clementine',c:'verdura',v:[47,.9,12,.1]},
-  fragole:{n:'Fragole',c:'verdura',v:[32,.7,8,.3]},
-  anguria:{n:'Anguria o melone',c:'verdura',v:[30,.6,8,.2]},
-  patate:{n:'Patate',c:'verdura',v:[80,2,17,.1]},
-  bosco:{n:'Frutti di bosco',c:'surgelati',v:[45,.8,10,.3]},
-  edamame:{n:'Edamame surgelati',c:'surgelati',v:[120,12,9,5]},
-  mango:{n:'Mango a cubetti',c:'surgelati',v:[60,.8,15,.4]},
-  ananas:{n:'Ananas a cubetti',c:'surgelati',v:[50,.5,13,.1]},
-  pane:{n:'Pane integrale',c:'pane',v:[240,9,43,3]},
-  riso:{n:'Riso basmati',c:'dispensa',v:[350,7,78,.6]},
-  pasta:{n:'Pasta integrale (formato corto)',c:'dispensa',v:[340,13,64,2.5]},
-  pastaprot:{n:'Pasta proteica (di legumi)',c:'dispensa',v:[335,25,42,3.5]},
-  noodles:{n:'Spaghetti di riso',c:'dispensa',v:[360,6,80,.6]},
-  farro:{n:'Farro',c:'dispensa',v:[335,15,67,2.5]},
-  orzo:{n:'Orzo perlato',c:'dispensa',v:[350,10,72,1.5]},
-  quinoa:{n:'Quinoa',c:'dispensa',v:[365,14,64,6]},
-  couscous:{n:'Couscous',c:'dispensa',v:[360,13,72,1]},
-  ceci:{n:'Ceci in scatola',c:'dispensa',v:[120,7,17,2.5]},
-  fagioli:{n:'Fagioli in scatola',c:'dispensa',v:[100,7,14,.5]},
-  tonnoscatola:{n:'Tonno al naturale in scatola',c:'dispensa',v:[103,24,0,1]},
-  lenticchie:{n:'Lenticchie secche',c:'dispensa',v:[340,24,50,1.5]},
-  soia:{n:'Bevanda di soia',c:'dispensa',u:'ml',v:[33,3.3,.6,1.8]},
-  avenadrink:{n:"Bevanda d'avena",c:'dispensa',u:'ml',v:[45,1,7,1.5]},
-  cocco:{n:'Acqua di cocco',c:'dispensa',u:'ml',v:[20,.2,4.5,0]},
-  fiocchi:{n:"Fiocchi d'avena",c:'dispensa',v:[370,13,60,7]},
-  chia:{n:'Semi di chia o lino',c:'dispensa',v:[490,17,42,31]},
-  proteine:{n:'Proteine in polvere',c:'dispensa',v:[380,80,6,5]},
-  arachidi:{n:'Burro di arachidi',c:'dispensa',v:[600,25,15,50]},
-  miele:{n:'Miele',c:'dispensa',v:[304,.3,82,0]},
-  mandorle:{n:'Mandorle o frutta secca',c:'dispensa',v:[580,21,9,50]},
-  cioccolato:{n:'Cioccolato fondente 70%+',c:'dispensa',v:[580,8,35,42]},
-  olio:{n:'Olio extravergine',c:'dispensa',u:'ml',v:[820,0,0,92]},
+  pollo:{n:'Petto di pollo',c:'carne',v:[110,23,0,1.5,0]},
+  tacchino:{n:'Fesa di tacchino',c:'carne',v:[107,24,0,1,0]},
+  salmone:{n:'Salmone',c:'carne',v:[200,20,0,13,0]},
+  merluzzo:{n:'Pesce bianco (merluzzo)',c:'carne',v:[80,18,0,.7,0]},
+  manzo:{n:'Manzo magro (fesa o macinato magro)',c:'carne',v:[130,21,0,5,0]},
+  lonza:{n:'Lonza di maiale',c:'carne',v:[145,21,0,6.5,0]},
+  orata:{n:'Filetti di orata o branzino',c:'carne',v:[120,20,0,4.5,0]},
+  tonno:{n:'Tonno fresco',c:'carne',v:[110,23,0,1.5,0]},
+  gamberi:{n:'Gamberi o gamberetti',c:'carne',v:[80,18,0,1,0]},
+  tofu:{n:'Tofu compatto',c:'frigo',v:[140,14,2,8,1]},
+  tempeh:{n:'Tempeh',c:'frigo',v:[192,19,9,11,5]},
+  seitan:{n:'Seitan',c:'frigo',v:[120,25,4,2,1]},
+  uova:{n:'Uova',c:'frigo',u:'pz',v:[85,7.5,.4,6,0]},
+  feta:{n:'Feta',c:'frigo',v:[260,15,1,21,0]},
+  skyr:{n:'Yogurt greco 0% o skyr',c:'frigo',v:[60,10.5,4,.2,0]},
+  latte:{n:'Latte parzialmente scremato',c:'frigo',u:'ml',v:[46,3.3,5,1.6,0]},
+  ricotta:{n:'Fiocchi di latte o ricotta magra',c:'frigo',v:[85,11,3,3,0]},
+  hummus:{n:'Hummus',c:'frigo',v:[180,7,14,11,6]},
+  banana:{n:'Banane',c:'verdura',v:[89,1.1,23,.3,2.6]},
+  kiwi:{n:'Kiwi',c:'verdura',v:[61,1.1,15,.5,3]},
+  pera:{n:'Pere',c:'verdura',v:[57,.4,15,.1,3.1]},
+  mela:{n:'Mele',c:'verdura',v:[52,.3,14,.2,2.4]},
+  pesca:{n:'Pesche o albicocche',c:'verdura',v:[39,.9,10,.3,1.5]},
+  papaya:{n:'Papaya',c:'verdura',v:[43,.5,11,.3,1.7]},
+  avocado:{n:'Avocado',c:'verdura',v:[160,2,9,15,6.7]},
+  frutto:{n:'Frutta di stagione (merende)',c:'verdura',v:[55,.7,13,.2,2]},
+  uva:{n:'Uva',c:'verdura',v:[69,.7,18,.2,0.9]},
+  arancia:{n:'Arance o clementine',c:'verdura',v:[47,.9,12,.1,2.4]},
+  fragole:{n:'Fragole',c:'verdura',v:[32,.7,8,.3,2]},
+  anguria:{n:'Anguria o melone',c:'verdura',v:[30,.6,8,.2,0.4]},
+  patate:{n:'Patate',c:'verdura',v:[80,2,17,.1,2]},
+  bosco:{n:'Frutti di bosco',c:'surgelati',v:[45,.8,10,.3,4]},
+  edamame:{n:'Edamame surgelati',c:'surgelati',v:[120,12,9,5,5]},
+  mango:{n:'Mango a cubetti',c:'surgelati',v:[60,.8,15,.4,1.8]},
+  ananas:{n:'Ananas a cubetti',c:'surgelati',v:[50,.5,13,.1,1.4]},
+  pane:{n:'Pane integrale',c:'pane',v:[240,9,43,3,7]},
+  riso:{n:'Riso basmati',c:'dispensa',v:[350,7,78,.6,1]},
+  pasta:{n:'Pasta integrale (formato corto)',c:'dispensa',v:[340,13,64,2.5,7]},
+  pastaprot:{n:'Pasta proteica (di legumi)',c:'dispensa',v:[335,25,42,3.5,10]},
+  noodles:{n:'Spaghetti di riso',c:'dispensa',v:[360,6,80,.6,1]},
+  farro:{n:'Farro',c:'dispensa',v:[335,15,67,2.5,7]},
+  orzo:{n:'Orzo perlato',c:'dispensa',v:[350,10,72,1.5,10]},
+  quinoa:{n:'Quinoa',c:'dispensa',v:[365,14,64,6,7]},
+  couscous:{n:'Couscous',c:'dispensa',v:[360,13,72,1,3]},
+  ceci:{n:'Ceci in scatola',c:'dispensa',v:[120,7,17,2.5,5]},
+  fagioli:{n:'Fagioli in scatola',c:'dispensa',v:[100,7,14,.5,6]},
+  tonnoscatola:{n:'Tonno al naturale in scatola',c:'dispensa',v:[103,24,0,1,0]},
+  lenticchie:{n:'Lenticchie secche',c:'dispensa',v:[340,24,50,1.5,11]},
+  soia:{n:'Bevanda di soia',c:'dispensa',u:'ml',v:[33,3.3,.6,1.8,0.4]},
+  avenadrink:{n:"Bevanda d'avena",c:'dispensa',u:'ml',v:[45,1,7,1.5,0.8]},
+  cocco:{n:'Acqua di cocco',c:'dispensa',u:'ml',v:[20,.2,4.5,0,0]},
+  fiocchi:{n:"Fiocchi d'avena",c:'dispensa',v:[370,13,60,7,10]},
+  chia:{n:'Semi di chia o lino',c:'dispensa',v:[490,17,42,31,34]},
+  proteine:{n:'Proteine in polvere',c:'dispensa',v:[380,80,6,5,1]},
+  arachidi:{n:'Burro di arachidi',c:'dispensa',v:[600,25,15,50,6]},
+  miele:{n:'Miele',c:'dispensa',v:[304,.3,82,0,0]},
+  mandorle:{n:'Mandorle o frutta secca',c:'dispensa',v:[580,21,9,50,12]},
+  cioccolato:{n:'Cioccolato fondente 70%+',c:'dispensa',v:[580,8,35,42,11]},
+  olio:{n:'Olio extravergine',c:'dispensa',u:'ml',v:[820,0,0,92,0]},
 };
 const VEGS={broccoli:'Broccoli',zucchine:'Zucchine',spinaci:'Spinaci',rucola:'Rucola',pomodorini:'Pomodorini',cetrioli:'Cetrioli',peperoni:'Peperoni',carote:'Carote',sedano:'Sedano',insalata:'Insalata mista',zucca:'Zucca',finocchio:'Finocchio',cavolfiore:'Cavolfiore',melanzane:'Melanzane',funghi:'Funghi',bietole:'Bietole'};
-Object.entries(VEGS).forEach(([k,n])=>{FOODS[k]={n,c:'verdura',v:[25,2,4,.3]}});
+Object.entries(VEGS).forEach(([k,n])=>{FOODS[k]={n,c:'verdura',v:[25,2,4,.3,2.5]}});
 
 const CATS=[['carne','Carne e pesce'],['frigo','Frigo'],['verdura','Frutta e verdura'],['surgelati','Surgelati'],['pane','Pane'],['dispensa','Dispensa'],['aromi','Aromi e spezie']];
 const AROMI={curry:'Curry',paprika:'Paprika',limone:'Limone',prezzemolo:'Prezzemolo',rosmarino:'Rosmarino',curcuma:'Curcuma',pepe:'Pepe nero',aglio:'Aglio',origano:'Origano',cannella:'Cannella',cacao:'Cacao amaro',zenzero:'Zenzero fresco',vaniglia:'Vaniglia'};
@@ -402,8 +405,8 @@ const DINNER_MAIN=['d1','d2','d3','d4','d5','d6'];
 const DINNER_ALT=['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c14','c15','c16','c17','c18','c20','c21','r1','r2','r3'];
 const LUNCH_READY=['c2','c4','c5','c6','c7','c13','c14','c16','c19','c20'];
 // riferimento per il pasto libero: pizza diavola, una porzione di patatine e una birra media
-const FREE_MEAL={n:[1700,50,175,75],d:'Riferimento: pizza diavola, patatine e una birra media'};
-const OFFICE_MEAL={n:[850,35,110,25],d:'Riferimento: pizza romana sottile con verdure o bresaola, un contorno prima'};
+const FREE_MEAL={n:[1700,50,175,75,8],d:'Riferimento: pizza diavola, patatine e una birra media'};
+const OFFICE_MEAL={n:[850,35,110,25,6],d:'Riferimento: pizza romana sottile con verdure o bresaola, un contorno prima'};
 const POSTRUN=['r1','r2','r3','c4'];
 const TPL_GROUPS=[['Le 6 cene veloci',DINNER_MAIN],['Combinazioni pronte',['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c15','c16','c17','c18','c20','c21']],['Da portare in ufficio (buone anche fredde)',['c6','c13','c14','c19']],['Carbo pieno, ottime dopo la corsa',['r1','r2','r3']]];
 
@@ -505,9 +508,17 @@ function slotFoods(i,k){
   else if(m.type==='libero'){out.fixed=FREE_MEAL.n.slice();out.libero=true}
   return out;
 }
-function nutOf(items){const t=[0,0,0,0];items.forEach(([id,a])=>{const f=FOODS[id];if(!f)return;const k=f.u==='pz'?a:a/100;f.v.forEach((x,j)=>t[j]+=x*k)});return t}
-function dayNut(i){const t=[0,0,0,0];let libero=false;SLOTS.forEach(k=>{const o=slotFoods(i,k);(o.fixed||nutOf(o.items)).forEach((x,j)=>t[j]+=x);if(o.libero)libero=true});return {t,libero}}
+function nutOf(items){const t=[0,0,0,0,0];items.forEach(([id,a])=>{const f=FOODS[id];if(!f)return;const k=f.u==='pz'?a:a/100;f.v.forEach((x,j)=>t[j]+=x*k)});return t}
+function dayNut(i){const t=[0,0,0,0,0];let libero=false;SLOTS.forEach(k=>{const o=slotFoods(i,k);(o.fixed||nutOf(o.items)).forEach((x,j)=>t[j]+=x);if(o.libero)libero=true});return {t,libero}}
 const baseTarget=i=>isTraining(i)?2375:2200;
+const PROT_TARGET=150,FIBER_TARGET=30; // le fibre sono un minimo, non un limite
+// grassi ~25% delle kcal, carboidrati = il resto dopo le proteine
+// proteine e fibre sono minimi (rosso se mancano), carboidrati e grassi sono tetti (rosso se superati)
+function macroRows(t,mt){
+  const st=(v,m,min)=>min?(v/m<(min===2?.8:.83)?'st-low':'st-ok'):(v/m>1.1?'st-high':'st-ok');
+  return [['Proteine',t[1],mt.p,'g',st(t[1],mt.p,1)],['Carboidrati',t[2],mt.c,'g',st(t[2],mt.c)],['Grassi',t[3],mt.f,'g',st(t[3],mt.f)],['Fibre',t[4],FIBER_TARGET,'g',st(t[4],FIBER_TARGET,2)]];
+}
+function macroTargets(i){const k=target(i),f=Math.round(.25*k/9);return {p:PROT_TARGET,c:Math.round((k-4*PROT_TARGET-9*f)/4),f}}
 const TYPICAL_MEAL=650; // un pranzo o una cena del piano
 // un pasto libero alza l'obiettivo del giorno per metà del suo extra; l'altra metà viene spalmata sugli altri giorni
 function dayExtra(i){let e=0;SLOTS.forEach(k=>{const m=S.days[i][k];if(!m)return;if(m.type==='libero')e+=FREE_MEAL.n[0]-TYPICAL_MEAL;else if(m.type==='pizza')e+=OFFICE_MEAL.n[0]-TYPICAL_MEAL});return Math.max(0,e)}
@@ -776,7 +787,7 @@ function renderPlan(){
   <div class="prep">
     ${carbTile()}
     ${proteinTile()}
-    <div class="tile tile-wide"><h3>Media giornaliera</h3><p><span class="big">${n?fmtN(sumK/n):'–'}</span> kcal, <b>${n?Math.round(sumP/n):'–'} g</b> proteine</p><p class="m">Pasti liberi compresi come stima. Obiettivo: 2.200 kcal, 2.375 nei giorni di allenamento, 150 g proteine. Nel giorno del pasto libero l'obiettivo sale, negli altri scende un po' per compensare.</p></div>
+    <div class="tile tile-wide"><h3>Media giornaliera</h3><p><span class="big">${n?fmtN(sumK/n):'–'}</span> kcal, <b>${n?Math.round(sumP/n):'–'} g</b> proteine</p><p class="m">Pasti liberi compresi come stima. Obiettivo: 2.200 kcal, 2.375 nei giorni di allenamento, ${PROT_TARGET} g proteine. Grassi circa il 25% delle kcal, carboidrati il resto, fibre almeno ${FIBER_TARGET} g (stima). Nel giorno del pasto libero l'obiettivo sale, negli altri scende un po' per compensare.</p></div>
   </div>`;
   const days=weekOrder().map((i,j)=>dayHTML(i,j)).join('');
   $('#panel-plan').innerHTML=`${tiles}
@@ -791,7 +802,7 @@ function renderPlan(){
 }
 
 function dayHTML(i,j){
-  const st=S.settings,x=dayNut(i),tg=target(i),k=x.t[0];
+  const st=S.settings,x=dayNut(i),tg=target(i),mt=macroTargets(i),k=x.t[0];
   const tags=[];
   if(i===6)tags.push('<span class="tag train">Corsa 10 km</span>');
   else if(st.gym.includes(i))tags.push('<span class="tag train">Palestra</span>');
@@ -807,9 +818,8 @@ function dayHTML(i,j){
       <div><div class="dh1"><h3>${DAYS[i]}</h3><span class="date">${dt.getDate()}/${dt.getMonth()+1}</span></div>
       <div class="tags">${tags.join('')}</div></div>
       <div class="nut" title="${esc(targetNote(i))}">
-        <b>${fmtN(k)}</b> / ${fmtN(tg)} kcal
-        <div class="bar" aria-hidden="true"><i class="${cls}" style="width:${Math.min(100,pct*100).toFixed(0)}%"></i></div>
-        <span class="${x.t[1]<125?'plow':''}"><b>${Math.round(x.t[1])} g</b> proteine</span>, kcal ${stTxt}
+        ${[['Energia',k,tg,'kcal',cls],...macroRows(x.t,mt)].map(r=>`<div class="mrow"><span>${r[0]} <b>${fmtN(r[1])}</b> / ${fmtN(r[2])} ${r[3]}</span><div class="bar" aria-hidden="true"><i class="${r[4]}" style="width:${Math.min(100,r[1]/r[2]*100).toFixed(0)}%"></i></div></div>`).join('')}
+        <span class="stat">kcal ${stTxt}</span>
       </div>
     </header>
     <div class="slots">${slotsOf(i).map(o=>slotHTML(i,o.k,o.wrapped?colDate(7):null)).join('')}</div>
