@@ -1,4 +1,4 @@
-const CACHE = 'mealprep-v9';
+const CACHE = 'mealprep-v10';
 const APP_SHELL = [
   './',
   './index.html',

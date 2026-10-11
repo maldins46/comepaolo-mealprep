@@ -444,7 +444,7 @@ function dayDate(i){const j=colIndex(i);return colDate(j)}
 function longDate(d){return d.toLocaleDateString('it-IT',{day:'numeric',month:'long'})}
 
 /* ---------- Stato ---------- */
-function blankWeek(){return {v:1,settings:{gym:[0,2,4],office:{day:1,k:'l'},free:{day:5,k:'d'},fresh:'pollo',batchA:'riso',batchB:'farro',start:nextDow(6),startSlot:'d'},days:Array.from({length:7},()=>({b:null,l:null,s:null,d:null})),checked:{}}}
+function blankWeek(){return {v:1,settings:{gym:[0,2,4],office:{day:1,k:'l'},free:{day:5,k:'d'},run:6,fresh:'pollo',batchA:'riso',batchB:'farro',start:nextDow(6),startSlot:'d'},days:Array.from({length:7},()=>({b:null,l:null,s:null,d:null})),checked:{}}}
 let S=null;
 let tab=store.get(LS_TAB)==='shop'?'shop':'plan';
 function persist(){store.set(LS_CUR,S)}
@@ -467,8 +467,9 @@ function protItems(p){
   }
   return [];
 }
-const isTraining=i=>i===6||S.settings.gym.includes(i);
-const bigCarb=(i,k)=>(k==='d'&&isTraining(i))||(k==='l'&&i===6);
+const runDay=()=>S.settings.run??6;
+const isTraining=i=>i===runDay()||S.settings.gym.includes(i);
+const bigCarb=(i,k)=>(k==='d'&&isTraining(i))||(k==='l'&&i===runDay());
 function carbAmt(c,big){if(c==='patate')return big?380:300;if(c==='pane')return big?120:100;return big?95:75}
 const batchOf=i=>seqPos(i,'l')<16?'A':'B';
 const batchCarb=i=>S.settings['batch'+batchOf(i)];
@@ -545,7 +546,7 @@ const isSpecial=(kind,m)=>!!m&&(kind==='office'?m.type==='pizza':(m.type==='libe
 const makeSpecial=kind=>kind==='office'?{type:'pizza'}:{type:'libero',label:'Pasto libero',free:true};
 function findSpecial(kind){for(let i=0;i<7;i++)for(const k of ['l','d'])if(isSpecial(kind,S.days[i][k]))return {day:i,k};return null}
 function syncSpecials(){S.settings.office=findSpecial('office');S.settings.free=findSpecial('free')}
-function fillSlot(i,k){if(k==='d')return {type:'meal',tpl:unusedDinner()};if(i===6)return {type:'meal',tpl:rnd(POSTRUN)};return {type:'leftover'}}
+function fillSlot(i,k){if(k==='d')return {type:'meal',tpl:unusedDinner()};if(i===runDay())return {type:'meal',tpl:rnd(POSTRUN)};return {type:'leftover'}}
 function moveSpecial(kind,pos){
   const other=kind==='office'?'free':'office';
   const cur=findSpecial(kind);
@@ -561,7 +562,7 @@ function fixLunches(){
     const l=S.days[i].l;if(!l||l.locked)continue;
     const src=leftSrc(i);
     if(l.type==='leftover'&&!src)S.days[i].l={type:'meal',tpl:rnd(LUNCH_READY),auto:true};
-    else if(l.type==='meal'&&l.auto&&src&&i!==6)S.days[i].l={type:'leftover'};
+    else if(l.type==='meal'&&l.auto&&src&&i!==runDay())S.days[i].l={type:'leftover'};
   }
 }
 const posLabel=p=>`${DAYS[p.day]} ${p.k==='l'?'pranzo':'cena'}`;
@@ -612,7 +613,7 @@ function generate(keep){
     if(L(i,'l'))continue;
     const sp=spAt(i,'l');
     if(sp)D[i].l=sp;
-    else if(i===6)D[i].l={type:'meal',tpl:rnd(POSTRUN)};
+    else if(i===runDay())D[i].l={type:'meal',tpl:rnd(POSTRUN)};
     else{const p=D[(i+6)%7].d;D[i].l=(p&&p.type==='meal')?{type:'leftover'}:{type:'meal',tpl:rnd(LUNCH_READY),auto:true}}
   }
   // bilanciamento: giorni poveri di proteine (es. doppio legume) ricevono colazione e merenda più proteiche
@@ -634,7 +635,7 @@ function view(i,k,m){
     v.s='';
     v.s2=itemsLine(o.items)+(m.extra?`, ${EXTRAS[m.extra].toLowerCase()}`:'');
     v.pills.push(kcalPill(o.items));
-    if(i===6)v.pills.push('Miele prima della corsa');
+    if(i===runDay())v.pills.push('Miele prima della corsa');
   }else if(m.type==='snack'){
     const s=SNACKS[m.id];v.t=s?s.n:'Merenda';v.s=itemsLine(o.items);v.pills.push(kcalPill(o.items));
   }else if(m.type==='meal'){
@@ -700,11 +701,24 @@ function specialOpts(kind){
   }
   return h;
 }
+// sposta la corsa: il pranzo del giorno vecchio torna normale, quello del giorno nuovo diventa post-corsa (se non è bloccato o speciale)
+function setRunDay(d){
+  const old=runDay(),st=S.settings;
+  if(d===old)return;
+  st.run=d;st.gym=st.gym.filter(x=>x!==d);
+  const lo=S.days[old].l;
+  if(lo&&!lo.locked&&lo.type==='meal'&&POSTRUN.includes(lo.tpl))S.days[old].l={type:'leftover'};
+  const ln=S.days[d].l;
+  if(!ln||(!ln.locked&&ln.type!=='libero'&&ln.type!=='pizza'&&!isSpecial('office',ln)&&!isSpecial('free',ln)))S.days[d].l={type:'meal',tpl:rnd(POSTRUN)};
+  fixLunches();render();
+}
 function renderSettings(){
   const st=S.settings;
   $('#settings').innerHTML=`
   <div class="field"><span class="flabel" id="gym-l">Palestra al mattino</span>
-    <div class="chips" role="group" aria-labelledby="gym-l">${[0,1,2,3,4,5].map(i=>`<button class="chip" data-act="gym" data-d="${i}" aria-pressed="${st.gym.includes(i)}">${cap(SHORT[i])}</button>`).join('')}</div></div>
+    <div class="chips" role="group" aria-labelledby="gym-l">${[0,1,2,3,4,5,6].filter(i=>i!==runDay()).map(i=>`<button class="chip" data-act="gym" data-d="${i}" aria-pressed="${st.gym.includes(i)}">${cap(SHORT[i])}</button>`).join('')}</div></div>
+  <div class="field"><label class="flabel" for="set-run">Giorno della corsa</label>
+    <select id="set-run" data-set="run">${DAYS.map((d,i)=>`<option value="${i}"${runDay()===i?' selected':''}>${d}</option>`).join('')}</select></div>
   <div class="field"><label class="flabel" for="set-office">Pasto libero in ufficio</label>
     <select id="set-office" data-set="office">${specialOpts('office')}</select></div>
   <div class="field"><label class="flabel" for="set-free">Pasto libero</label>
@@ -733,7 +747,7 @@ function carbPlan(){
     const l=S.days[i].l;if(!l)continue;
     let carb=null,amt=0,src=null;
     if(l.type==='leftover'&&leftSrc(i)){carb=batchCarb(i);amt=75;src=batchOf(i)}
-    else if(l.type==='meal'&&i!==6){const r=resolve(l);if(BATCH_CARBS.includes(r.carb)){carb=r.carb;amt=carbAmt(r.carb,bigCarb(i,'l'))}}  // il pranzo della domenica si cucina sul momento
+    else if(l.type==='meal'&&i!==runDay()){const r=resolve(l);if(BATCH_CARBS.includes(r.carb)){carb=r.carb;amt=carbAmt(r.carb,bigCarb(i,'l'))}}  // il pranzo della domenica si cucina sul momento
     if(!carb)continue;
     const row=(rows[carb]=rows[carb]||{fridge:0,freezer:0,fd:[],zd:[],src:new Set()});
     if(src)row.src.add(src);
@@ -805,7 +819,7 @@ function renderPlan(){
 function dayHTML(i,j,wrap){
   const st=S.settings,x=dayNut(i),tg=target(i),mt=macroTargets(i),k=x.t[0];
   const tags=[];
-  if(i===6)tags.push('<span class="tag train">Corsa 10 km</span>');
+  if(i===runDay())tags.push('<span class="tag train">Corsa 10 km</span>');
   else if(st.gym.includes(i))tags.push('<span class="tag train">Palestra</span>');
   if(st.office&&st.office.day===i)tags.push('<span class="tag">Libero in ufficio</span>');
   if(st.free&&st.free.day===i)tags.push('<span class="tag">Pasto libero</span>');
@@ -1140,7 +1154,8 @@ document.addEventListener('change',e=>{
     const v=t.value;const pos=v?{day:+v.split('-')[0],k:v.split('-')[1]}:null;
     moveSpecial(key,pos);
     render();toast(pos?`${SPECIAL_NAME[key]}: ${posLabel(pos).toLowerCase()}`:`${SPECIAL_NAME[key]} tolto per questa settimana`);return;
-  }else if(key==='start'){if(t.value)st.start=t.value}
+  }else if(key==='run'){setRunDay(+t.value);toast(`Corsa: ${DAYS[runDay()].toLowerCase()}`);return}
+  else if(key==='start'){if(t.value)st.start=t.value}
   else st[key]=t.value;
   render();
 });
@@ -1212,6 +1227,8 @@ function migrate(){
   const st=S.settings;
   S.days.forEach(d=>{if(d.d&&d.d.label==='Ristorante etnico')d.d.label='Pasto libero'});
   if(!st.startSlot)st.startSlot='b';
+  if(!('run' in st))st.run=6;
+  st.gym=st.gym.filter(d=>d!==st.run);
   S.days.forEach(d=>{const b=d.b;if(b&&b.type==='smoothie'&&!b.f1){if(b.single){b.f1=b.single;b.f2=''}else{const fc=FRUIT_COMBOS[b.fruit]||FRUIT_COMBOS[0];b.f1=fc[0];b.f2=fc[1]}delete b.single;delete b.fruit}});
   if(!('free' in st)){
     if(!S.days.some(d=>isSpecial('free',d.l)||isSpecial('free',d.d))){const sat=S.days[5].d;if(sat&&sat.type==='libero'&&st.restaurant!==false)sat.free=true}
