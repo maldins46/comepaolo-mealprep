@@ -290,6 +290,7 @@ const FOODS={
   feta:{n:'Feta',c:'frigo',v:[260,15,1,21]},
   skyr:{n:'Yogurt greco 0% o skyr',c:'frigo',v:[60,10.5,4,.2]},
   latte:{n:'Latte parzialmente scremato',c:'frigo',u:'ml',v:[46,3.3,5,1.6]},
+  ricotta:{n:'Fiocchi di latte o ricotta magra',c:'frigo',v:[85,11,3,3]},
   hummus:{n:'Hummus',c:'frigo',v:[180,7,14,11]},
   banana:{n:'Banane',c:'verdura',v:[89,1.1,23,.3]},
   kiwi:{n:'Kiwi',c:'verdura',v:[61,1.1,15,.5]},
@@ -299,18 +300,25 @@ const FOODS={
   papaya:{n:'Papaya',c:'verdura',v:[43,.5,11,.3]},
   avocado:{n:'Avocado',c:'verdura',v:[160,2,9,15]},
   frutto:{n:'Frutta di stagione (merende)',c:'verdura',v:[55,.7,13,.2]},
+  uva:{n:'Uva',c:'verdura',v:[69,.7,18,.2]},
+  arancia:{n:'Arance o clementine',c:'verdura',v:[47,.9,12,.1]},
+  fragole:{n:'Fragole',c:'verdura',v:[32,.7,8,.3]},
+  anguria:{n:'Anguria o melone',c:'verdura',v:[30,.6,8,.2]},
   patate:{n:'Patate',c:'verdura',v:[80,2,17,.1]},
   bosco:{n:'Frutti di bosco',c:'surgelati',v:[45,.8,10,.3]},
+  edamame:{n:'Edamame surgelati',c:'surgelati',v:[120,12,9,5]},
   mango:{n:'Mango a cubetti',c:'surgelati',v:[60,.8,15,.4]},
   ananas:{n:'Ananas a cubetti',c:'surgelati',v:[50,.5,13,.1]},
   pane:{n:'Pane integrale',c:'pane',v:[240,9,43,3]},
   riso:{n:'Riso basmati',c:'dispensa',v:[350,7,78,.6]},
   pasta:{n:'Pasta integrale (formato corto)',c:'dispensa',v:[340,13,64,2.5]},
+  pastaprot:{n:'Pasta proteica (di legumi)',c:'dispensa',v:[335,25,42,3.5]},
   farro:{n:'Farro',c:'dispensa',v:[335,15,67,2.5]},
   orzo:{n:'Orzo perlato',c:'dispensa',v:[350,10,72,1.5]},
   quinoa:{n:'Quinoa',c:'dispensa',v:[365,14,64,6]},
   couscous:{n:'Couscous',c:'dispensa',v:[360,13,72,1]},
   ceci:{n:'Ceci in scatola',c:'dispensa',v:[120,7,17,2.5]},
+  fagioli:{n:'Fagioli in scatola',c:'dispensa',v:[100,7,14,.5]},
   tonnoscatola:{n:'Tonno al naturale in scatola',c:'dispensa',v:[103,24,0,1]},
   lenticchie:{n:'Lenticchie secche',c:'dispensa',v:[340,24,50,1.5]},
   soia:{n:'Bevanda di soia',c:'dispensa',u:'ml',v:[33,3.3,.6,1.8]},
@@ -325,23 +333,24 @@ const FOODS={
   cioccolato:{n:'Cioccolato fondente 70%+',c:'dispensa',v:[580,8,35,42]},
   olio:{n:'Olio extravergine',c:'dispensa',u:'ml',v:[820,0,0,92]},
 };
-const VEGS={broccoli:'Broccoli',zucchine:'Zucchine',spinaci:'Spinaci',rucola:'Rucola',pomodorini:'Pomodorini',cetrioli:'Cetrioli',peperoni:'Peperoni',carote:'Carote',sedano:'Sedano',insalata:'Insalata mista'};
+const VEGS={broccoli:'Broccoli',zucchine:'Zucchine',spinaci:'Spinaci',rucola:'Rucola',pomodorini:'Pomodorini',cetrioli:'Cetrioli',peperoni:'Peperoni',carote:'Carote',sedano:'Sedano',insalata:'Insalata mista',zucca:'Zucca',finocchio:'Finocchio',cavolfiore:'Cavolfiore',melanzane:'Melanzane',funghi:'Funghi',bietole:'Bietole'};
 Object.entries(VEGS).forEach(([k,n])=>{FOODS[k]={n,c:'verdura',v:[25,2,4,.3]}});
 
 const CATS=[['carne','Carne e pesce'],['frigo','Frigo'],['verdura','Frutta e verdura'],['surgelati','Surgelati'],['pane','Pane'],['dispensa','Dispensa'],['aromi','Aromi e spezie']];
 const AROMI={curry:'Curry',paprika:'Paprika',limone:'Limone',prezzemolo:'Prezzemolo',rosmarino:'Rosmarino',curcuma:'Curcuma',pepe:'Pepe nero',aglio:'Aglio',origano:'Origano',cannella:'Cannella',cacao:'Cacao amaro',zenzero:'Zenzero fresco',vaniglia:'Vaniglia'};
 const SPICES={'':[],'Curry':['curry'],'Paprika':['paprika'],'Limone + prezzemolo':['limone','prezzemolo'],'Rosmarino':['rosmarino'],'Curcuma + pepe nero':['curcuma','pepe'],'Aglio + origano':['aglio','origano']};
 const METHODS=['In padella','Al forno','Al vapore','Alla griglia','Crudo / insalata','Saltato in wok'];
-const PROTS={pollo:'Pollo',tacchino:'Tacchino',manzo:'Manzo magro',lonza:'Lonza di maiale',salmone:'Salmone',merluzzo:'Pesce bianco',orata:'Orata o branzino',tonno:'Tonno fresco',gamberi:'Gamberi',tofu:'Tofu',tempeh:'Tempeh',seitan:'Seitan',uova:'Uova',uovafeta:'Uova e feta',tonnoscatola:'Tonno in scatola',ceci:'Ceci',lenticchie:'Lenticchie'};
+const PROTS={pollo:'Pollo',tacchino:'Tacchino',manzo:'Manzo magro',lonza:'Lonza di maiale',salmone:'Salmone',merluzzo:'Pesce bianco',orata:'Orata o branzino',tonno:'Tonno fresco',gamberi:'Gamberi',tofu:'Tofu',tempeh:'Tempeh',seitan:'Seitan',uova:'Uova',uovafeta:'Uova e feta',tonnoscatola:'Tonno in scatola',ceci:'Ceci',lenticchie:'Lenticchie',fagioli:'Fagioli',edamame:'Edamame'};
 const FRESH_OPTS=['pollo','tacchino','manzo','lonza','salmone','merluzzo','orata','tonno','gamberi','tofu','tempeh','seitan'];
 // porzione a crudo pensata per ~35-45 g di proteine, come 150-180 g di pollo cotto
 const PORTION={pollo:220,tacchino:220,manzo:200,lonza:200,salmone:200,merluzzo:220,orata:220,tonno:180,gamberi:250,tofu:250,tempeh:180,seitan:180};
 const FISH=['salmone','merluzzo','orata','tonno','gamberi','tonnoscatola'],MEAT=['pollo','tacchino','manzo','lonza'],VEGPROT=['tofu','tempeh','seitan'];
-const CARBS={riso:'Riso basmati',pasta:'Pasta integrale',farro:'Farro',orzo:'Orzo',quinoa:'Quinoa',couscous:'Couscous',patate:'Patate',pane:'Pane integrale'};
-const BATCH_CARBS=['riso','farro','orzo','quinoa','pasta','couscous'];
+const CARBS={riso:'Riso basmati',pasta:'Pasta integrale',pastaprot:'Pasta proteica',farro:'Farro',orzo:'Orzo',quinoa:'Quinoa',couscous:'Couscous',patate:'Patate',pane:'Pane integrale'};
+const BATCH_CARBS=['riso','farro','orzo','quinoa','pasta','pastaprot','couscous'];
 const LIQUIDS={latte:'Latte',soia:'Bevanda di soia',avenadrink:"Bevanda d'avena",yogurtdil:'Yogurt diluito con acqua',cocco:'Acqua di cocco'};
-const FRUIT_SHORT={banana:'banana',bosco:'frutti di bosco',mango:'mango',kiwi:'kiwi',pera:'pera',mela:'mela',pesca:'pesca',papaya:'papaya',avocado:'avocado',ananas:'ananas'};
-const SINGLE_FRUITS=['banana','bosco','mango','ananas','kiwi','pera','mela','pesca','papaya'];
+const FRUIT_SHORT={banana:'banana',bosco:'frutti di bosco',mango:'mango',kiwi:'kiwi',pera:'pera',mela:'mela',pesca:'pesca',papaya:'papaya',avocado:'avocado',ananas:'ananas',uva:'uva',arancia:'arancia',fragole:'fragole',anguria:'anguria o melone'};
+const SMOOTHIE_FRUITS=['banana','bosco','mango','ananas','kiwi','pera','mela','pesca','papaya','uva','arancia','fragole','anguria','avocado'];
+// solo per migrare i frullati salvati con la vecchia scelta a combinazioni; non riordinare
 const FRUIT_COMBOS=[['banana','bosco'],['mango','kiwi'],['pera','mela'],['pesca','papaya'],['bosco','kiwi'],['banana','mango'],['avocado','bosco'],['ananas','bosco']];
 const BOOSTS={proteine:'Proteine in polvere (1 misurino)',skyr:'Yogurt greco o skyr (2 cucchiai)',chia:'Semi di chia o lino extra',arachidi:'Burro di arachidi (1 cucchiaino)'};
 const BOOST_SHORT={proteine:'proteine',skyr:'yogurt greco',chia:'semi extra',arachidi:'burro di arachidi'};
@@ -354,6 +363,7 @@ const SNACKS={
   hummus:{n:'Hummus con carote e sedano',items:[['hummus',60],['carote',80],['sedano',50]]},
   frsecca:{n:'Un frutto e una manciata di frutta secca',items:[['frutto',150],['mandorle',12]]},
   skyr:{n:'Skyr o yogurt greco bianco',items:[['skyr',170]]},
+  ricotta:{n:'Fiocchi di latte con frutta',items:[['ricotta',120],['frutto',100]]},
 };
 
 const TPL={
@@ -377,17 +387,23 @@ const TPL={
   c13:{t:()=>'Insalata di quinoa con uova sode, feta, pomodorini e cetrioli',p:'uovafeta',carb:'quinoa',veg:['pomodorini','cetrioli'],m:'Crudo / insalata',s:'Aglio + origano'},
   c14:{t:()=>'Riso con tonno, zucchine e limone',p:'tonnoscatola',carb:'riso',veg:['zucchine'],m:'In padella',s:'Limone + prezzemolo'},
   c15:{t:P=>`${P} al forno con patate al rosmarino e carote`,p:'FRESH',carb:'patate',veg:['carote','insalata'],m:'Al forno',s:'Rosmarino'},
+  c16:{t:()=>'Crema di zucca e lenticchie con crostini',p:'lenticchie',carb:'pane',veg:['zucca','carote'],m:'',s:'Rosmarino',note:'Pentola grande, si congela bene'},
+  c17:{t:P=>`${P} al forno con finocchi e patate`,p:'FRESH',carb:'patate',veg:['finocchio'],m:'Al forno',s:'Rosmarino'},
+  c18:{t:P=>`Pasta proteica con ${P.toLowerCase()}, melanzane e pomodorini`,p:'FRESH',carb:'pastaprot',veg:['melanzane','pomodorini'],m:'In padella',s:'Aglio + origano'},
+  c19:{t:()=>'Insalata di farro, fagioli e finocchio al limone',p:'fagioli',carb:'farro',veg:['finocchio','rucola'],m:'Crudo / insalata',s:'Limone + prezzemolo',note:'Buona anche fredda'},
+  c20:{t:()=>'Riso saltato con edamame, funghi e bietole',p:'edamame',carb:'riso',veg:['funghi','bietole'],m:'In padella',s:'Aglio + origano'},
+  c21:{t:()=>'Uova al forno con cavolfiore e patate',p:'uova',carb:'patate',veg:['cavolfiore'],m:'Al forno',s:'Paprika'},
   r1:{t:P=>`Pasta con ${P.toLowerCase()}, pomodorini, aglio e origano`,p:'FRESH',carb:'pasta',veg:['pomodorini','rucola'],m:'In padella',s:'Aglio + origano'},
   r2:{t:P=>`Riso saltato in wok con ${P.toLowerCase()} e verdure`,p:'FRESH',carb:'riso',veg:['peperoni','carote'],m:'Saltato in wok',s:'Curcuma + pepe nero'},
 };
 const DINNER_MAIN=['d1','d2','d3','d4','d5','d6'];
-const DINNER_ALT=['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c14','c15','r1','r2'];
-const LUNCH_READY=['c2','c4','c5','c6','c7','c13','c14'];
+const DINNER_ALT=['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c14','c15','c16','c17','c18','c20','c21','r1','r2'];
+const LUNCH_READY=['c2','c4','c5','c6','c7','c13','c14','c16','c19','c20'];
 // riferimento per il pasto libero: pizza diavola, una porzione di patatine e una birra media
 const FREE_MEAL={n:[1700,50,175,75],d:'Riferimento: pizza diavola, patatine e una birra media'};
 const OFFICE_MEAL={n:[850,35,110,25],d:'Riferimento: pizza romana sottile con verdure o bresaola, un contorno prima'};
 const POSTRUN=['r1','r2','c4'];
-const TPL_GROUPS=[['Le 6 cene veloci',DINNER_MAIN],['Combinazioni pronte',['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c15']],['Da portare in ufficio (buone anche fredde)',['c6','c13','c14']],['Carbo pieno, ottime dopo la corsa',['r1','r2']]];
+const TPL_GROUPS=[['Le 6 cene veloci',DINNER_MAIN],['Combinazioni pronte',['c2','c3','c4','c5','c7','c8','c9','c10','c11','c12','c15','c16','c17','c18','c20','c21']],['Da portare in ufficio (buone anche fredde)',['c6','c13','c14','c19']],['Carbo pieno, ottime dopo la corsa',['r1','r2']]];
 
 const ICON={
   grip:'<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><g fill="currentColor"><circle cx="5" cy="3" r="1.4"/><circle cx="11" cy="3" r="1.4"/><circle cx="5" cy="8" r="1.4"/><circle cx="11" cy="8" r="1.4"/><circle cx="5" cy="13" r="1.4"/><circle cx="11" cy="13" r="1.4"/></g></svg>'
@@ -440,6 +456,8 @@ function protItems(p){
     case 'ceci':return [['ceci',240]];
     case 'tonnoscatola':return [['tonnoscatola',160]];
     case 'lenticchie':return [['lenticchie',80]];
+    case 'fagioli':return [['fagioli',240]];
+    case 'edamame':return [['edamame',200]];
   }
   return [];
 }
@@ -538,8 +556,8 @@ const posLabel=p=>`${DAYS[p.day]} ${p.k==='l'?'pranzo':'cena'}`;
 function generate(keep){
   const st=S.settings,D=S.days;
   const L=(i,k)=>keep&&D[i][k]&&D[i][k].locked;
-  const fr=shuffle([0,1,2,3,4,5]),extras=Object.keys(EXTRAS);
-  for(let i=0;i<7;i++)if(!L(i,'b'))D[i].b={type:'smoothie',liquid:Math.random()<.7?'latte':rnd(['soia','avenadrink']),fruit:fr[i%fr.length],boost:(i===2||i===5)?'skyr':'proteine',extra:rnd(extras)};
+  const fr=shuffle(SMOOTHIE_FRUITS.filter(f=>f!=='avocado')),extras=Object.keys(EXTRAS);
+  for(let i=0;i<7;i++)if(!L(i,'b'))D[i].b={type:'smoothie',liquid:Math.random()<.7?'latte':rnd(['soia','avenadrink']),f1:fr[(2*i)%fr.length],f2:fr[(2*i+1)%fr.length],boost:(i===2||i===5)?'skyr':'proteine',extra:rnd(extras)};
   const sn=shuffle(Object.keys(SNACKS));
   for(let i=0;i<7;i++)if(!L(i,'s'))D[i].s={type:'snack',id:sn[i%sn.length]};
 
@@ -587,7 +605,7 @@ function generate(keep){
   for(let i=0;i<7;i++){
     if(dayNut(i).t[1]>=135)continue;
     if(!L(i,'b')&&D[i].b)D[i].b.boost='proteine';
-    if(dayNut(i).t[1]<135&&!L(i,'s')){const hi=['yog','yogfrutta','skyr','uovasode'];if(!D[i].s||!hi.includes(D[i].s.id))D[i].s={type:'snack',id:rnd(hi)}}
+    if(dayNut(i).t[1]<135&&!L(i,'s')){const hi=['yog','yogfrutta','skyr','uovasode','ricotta'];if(!D[i].s||!hi.includes(D[i].s.id))D[i].s={type:'snack',id:rnd(hi)}}
   }
 }
 function unusedDinner(){const used=new Set(S.days.map(d=>d.d&&d.d.tpl).filter(Boolean));return [...shuffle(DINNER_MAIN),...shuffle(DINNER_ALT)].find(t=>!used.has(t))||'d1'}
@@ -633,7 +651,7 @@ function fmtItem(id,a){
   const f=FOODS[id];if(!f)return '';
   const nm=(SHORT_NAME[id]||f.n).toLowerCase();
   if(id==='uova')return `${a} ${a===1?'uovo':'uova'}`;
-  if(id==='ceci')return `ceci ${a} g sgocciolati`;
+  if(id==='ceci'||id==='fagioli')return `${nm} ${a} g sgocciolati`;
   if(f.u==='pz')return `${a} ${nm}`;
   return `${nm} ${a} ${f.u==='ml'?'ml':'g'}`;
 }
@@ -641,7 +659,7 @@ const itemsLine=items=>items.map(([id,a])=>fmtItem(id,a)).filter(Boolean).join('
 const macroLine=(items,fixed)=>{const n=fixed||nutOf(items);return `${fmtN(n[0])} kcal, ${Math.round(n[1])} g proteine, ${Math.round(n[2])} g carboidrati, ${Math.round(n[3])} g grassi`};
 const kcalPill=(items,fixed)=>{const n=fixed||nutOf(items);return `${fmtN(n[0])} kcal, ${Math.round(n[1])} g prot`};
 
-function fruitLabel(m){if(m.single&&FRUIT_SHORT[m.single])return FRUIT_SHORT[m.single];const fc=FRUIT_COMBOS[m.fruit]||FRUIT_COMBOS[0];return `${FRUIT_SHORT[fc[0]]} e ${FRUIT_SHORT[fc[1]]}`}
+function fruitLabel(m){return [m.f1,m.f2].filter(Boolean).map(f=>FRUIT_SHORT[f]).join(' e ')}
 
 /* ---------- Render ---------- */
 function render(){
@@ -813,18 +831,19 @@ function slotHTML(i,k,wrapDate){
 
 /* ---------- Spesa ---------- */
 function shopping(){
-  const acc={},aromi={};
+  const acc={},aromi={},aromiN={};
   for(let i=0;i<7;i++)SLOTS.forEach(k=>{
     const o=slotFoods(i,k);
-    o.items.forEach(([id,a])=>{(acc[id]=acc[id]||{amt:0,days:new Set()});acc[id].amt+=a;acc[id].days.add(i)});
-    o.aromi.forEach(a=>{(aromi[a]=aromi[a]||new Set()).add(i)});
+    o.items.forEach(([id,a])=>{(acc[id]=acc[id]||{amt:0,days:new Set(),n:0});acc[id].amt+=a;acc[id].n++;acc[id].days.add(i)});
+    o.aromi.forEach(a=>{(aromi[a]=aromi[a]||new Set()).add(i);aromiN[a]=(aromiN[a]||0)+1});
   });
-  return {acc,aromi};
+  return {acc,aromi,aromiN};
 }
+function portTxt(n){return `${n} ${n===1?'porzione':'porzioni'}`}
 function fmtQty(id,a){
   const f=FOODS[id];
   if(id==='tonnoscatola'){const n=Math.ceil(a/80);return `${n} scatolette`}
-  if(id==='ceci'){const n=Math.ceil(a/240);return `${n} ${n===1?'lattina':'lattine'}`}
+  if(id==='ceci'||id==='fagioli'){const n=Math.ceil(a/240);return `${n} ${n===1?'lattina':'lattine'}`}
   if(id==='proteine'){const n=Math.round(a/30);return `${n} misurini`}
   if(f.u==='pz')return `${Math.ceil(a)}`;
   if(f.u==='ml'){const r=Math.ceil(a/50)*50;return r>=1000?`${(r/1000).toLocaleString('it-IT',{maximumFractionDigits:2})} L`:`${r} ml`}
@@ -835,19 +854,20 @@ function daysTxt(set){const a=[...set].sort();return a.length===7?'tutti i giorn
 function itemNote(id,a,days){
   const base=daysTxt(days);
   if(PORTION[id]){const p=PORTION[id];return VEGPROT.includes(id)?`${Math.round(a/p)} porzioni da ${p} g (${base})`:`${Math.round(a/p)} porzioni da ${p} g crudi, da congelare singole (${base})`}
-  if(id==='ceci')return `${fmtN(a)} g sgocciolati (${base})`;
+  if(id==='ceci'||id==='fagioli')return `${fmtN(a)} g sgocciolati (${base})`;
+  if(id==='edamame')return `Surgelati: durano mesi (${base})`;
   if(id==='lenticchie')return `A crudo, circa 80 g a porzione (${base})`;
-  if(['riso','pasta','farro','orzo','quinoa','couscous'].includes(id))return `A crudo, controlla prima la dispensa (${base})`;
+  if(['riso','pasta','pastaprot','farro','orzo','quinoa','couscous'].includes(id))return `A crudo, controlla prima la dispensa (${base})`;
   if(id==='olio')return 'Un cucchiaio a pasto, controlla la bottiglia';
   if(id==='bosco'||id==='mango')return `Surgelati: durano mesi (${base})`;
   return base;
 }
 function shopGroups(){
-  const {acc,aromi}=shopping();
+  const {acc,aromi,aromiN}=shopping();
   const groups=CATS.map(([c,label])=>({c,label,items:[]}));
   const byC=Object.fromEntries(groups.map(g=>[g.c,g]));
-  Object.keys(FOODS).forEach(id=>{if(acc[id]&&acc[id].amt>0)byC[FOODS[id].c].items.push({key:id,n:FOODS[id].n,q:fmtQty(id,acc[id].amt),u:itemNote(id,acc[id].amt,acc[id].days)})});
-  Object.keys(AROMI).forEach(a=>{if(aromi[a])byC.aromi.items.push({key:'a:'+a,n:AROMI[a],q:'',u:daysTxt(aromi[a])})});
+  Object.keys(FOODS).forEach(id=>{if(acc[id]&&acc[id].amt>0)byC[FOODS[id].c].items.push({key:id,n:FOODS[id].n,q:fmtQty(id,acc[id].amt),u:(PORTION[id]?'':portTxt(acc[id].n)+' · ')+itemNote(id,acc[id].amt,acc[id].days)})});
+  Object.keys(AROMI).forEach(a=>{if(aromi[a])byC.aromi.items.push({key:'a:'+a,n:AROMI[a],q:'',u:portTxt(aromiN[a])+' · '+daysTxt(aromi[a])})});
   return groups.filter(g=>g.items.length);
 }
 function renderShop(){
@@ -1006,16 +1026,15 @@ function updatePreview(){
   el.innerHTML=`<b>${esc(r.title)}</b><br>${esc(itemsLine(items))}<br>${esc(macroLine(items))}`;
 }
 function smoothieForm(m){
-  m=m&&m.type==='smoothie'?m:{liquid:'latte',fruit:0,boost:'proteine',extra:'cannella'};
-  const curF=m.single?'s:'+m.single:'c:'+(m.fruit||0);
-  const o=(v,l)=>`<option value="${v}"${v===curF?' selected':''}>${esc(l)}</option>`;
-  const fruitSel=`<optgroup label="Combinazioni (115 g + 115 g)">${FRUIT_COMBOS.map((f,j)=>o('c:'+j,cap(`${FRUIT_SHORT[f[0]]} e ${FRUIT_SHORT[f[1]]}`))).join('')}</optgroup><optgroup label="Frutto singolo (230 g)">${SINGLE_FRUITS.map(f=>o('s:'+f,cap(FRUIT_SHORT[f]))).join('')}</optgroup>`;
+  m=m&&m.type==='smoothie'?m:{liquid:'latte',f1:'banana',f2:'bosco',boost:'proteine',extra:'cannella'};
+    const fruitOpts=(cur,none)=>(none?`<option value=""${cur?'':' selected'}>${none}</option>`:'')+SMOOTHIE_FRUITS.map(f=>`<option value="${f}"${f===cur?' selected':''}>${esc(cap(FRUIT_SHORT[f]))}</option>`).join('');
   return `<section class="mix" aria-labelledby="mix-sm">
   <h4 class="sec" id="mix-sm">Componi il frullato <span class="h4n">mix & match</span></h4>
-  <p class="mixnote">Scegli liquido, frutta, uno o due boost proteici e un aroma. Fiocchi d'avena e semi di chia o lino sono sempre inclusi, 10 g ciascuno.</p>
+  <p class="mixnote">Scegli liquido, una o due frutta (230 g in totale), uno o due boost proteici e un aroma. Fiocchi d'avena e semi di chia o lino sono sempre inclusi, 10 g ciascuno.</p>
   <div class="fgrid">
     <div class="field"><label class="flabel" for="sm-l">Liquido</label><select id="sm-l">${opts(LIQUIDS,m.liquid)}</select></div>
-    <div class="field"><label class="flabel" for="sm-f">Frutta</label><select id="sm-f">${fruitSel}</select></div>
+    <div class="field"><label class="flabel" for="sm-f1">Frutta</label><select id="sm-f1">${fruitOpts(m.f1)}</select></div>
+    <div class="field"><label class="flabel" for="sm-f2">Seconda frutta</label><select id="sm-f2">${fruitOpts(m.f2,'Nessuna')}</select></div>
     <div class="field"><label class="flabel" for="sm-b">Boost proteico</label><select id="sm-b">${opts(BOOSTS,m.boost)}</select></div>
     <div class="field"><label class="flabel" for="sm-b2">Secondo boost</label><select id="sm-b2">${opts(BOOSTS,m.boost2||'','Nessuno')}</select></div>
     <div class="field"><label class="flabel" for="sm-e">Aroma</label><select id="sm-e">${opts(EXTRAS,m.extra||'','Nessuno')}</select></div>
@@ -1027,8 +1046,9 @@ function smoothieForm(m){
 function smoothieItems(m){
   const items=[];
   if(m.liquid==='yogurtdil')items.push(['skyr',100]);else items.push([m.liquid||'latte',200]);
-  const fc=FRUIT_COMBOS[m.fruit]||FRUIT_COMBOS[0];
-  if(m.single&&FOODS[m.single])items.push([m.single,230]);else{items.push([fc[0],115]);items.push([fc[1],115])}
+  const fs=[m.f1,m.f2].filter(f=>f&&FOODS[f]);
+  if(!fs.length)fs.push('banana');
+  fs.forEach(f=>items.push([f,230/fs.length]));
   items.push(['fiocchi',10],['chia',10]);
   [m.boost,m.boost2].filter(Boolean).forEach(b=>{
     if(b==='proteine')items.push(['proteine',30]);
@@ -1039,7 +1059,7 @@ function smoothieItems(m){
   return items;
 }
 function updateSmoothiePrev(){const el=$('#sm-prev');if(!el)return;const items=smoothieItems(smoothieFromForm());el.innerHTML=`${esc(itemsLine(items))}<br>${esc(macroLine(items))}`}
-function smoothieFromForm(){const f=$('#sm-f').value,o={type:'smoothie',liquid:$('#sm-l').value,boost:$('#sm-b').value,boost2:$('#sm-b2').value===$('#sm-b').value?'':$('#sm-b2').value,extra:$('#sm-e').value};if(f.startsWith('s:')){o.single=f.slice(2);o.fruit=0}else o.fruit=+f.slice(2);return o}
+function smoothieFromForm(){const f1=$('#sm-f1').value,f2=$('#sm-f2').value===f1?'':$('#sm-f2').value,o={type:'smoothie',f1,f2,liquid:$('#sm-l').value,boost:$('#sm-b').value,boost2:$('#sm-b2').value===$('#sm-b').value?'':$('#sm-b2').value,extra:$('#sm-e').value};return o}
 function setSlot(i,k,val,msg){S.days[i][k]=val?Object.assign(val,{locked:true}):null;fixLunches();closeSheet();render();toast(msg||`${SLOT_LABEL[k]} di ${DAYS[i].toLowerCase()} aggiornata`)}
 
 function openSaved(){
@@ -1175,6 +1195,7 @@ function migrate(){
   const st=S.settings;
   S.days.forEach(d=>{if(d.d&&d.d.label==='Ristorante etnico')d.d.label='Pasto libero'});
   if(!st.startSlot)st.startSlot='b';
+  S.days.forEach(d=>{const b=d.b;if(b&&b.type==='smoothie'&&!b.f1){if(b.single){b.f1=b.single;b.f2=''}else{const fc=FRUIT_COMBOS[b.fruit]||FRUIT_COMBOS[0];b.f1=fc[0];b.f2=fc[1]}delete b.single;delete b.fruit}});
   if(!('free' in st)){
     if(!S.days.some(d=>isSpecial('free',d.l)||isSpecial('free',d.d))){const sat=S.days[5].d;if(sat&&sat.type==='libero'&&st.restaurant!==false)sat.free=true}
     delete st.restaurant;delete st.pizza;
