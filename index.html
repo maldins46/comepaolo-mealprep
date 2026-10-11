@@ -109,7 +109,6 @@ select,input[type="date"],input[type="text"]{padding:7px 10px;border:1.5px solid
 .nut b{color:var(--ink)}
 .mrow{text-align:left}
 .mrow .bar{margin:2px 0 4px}
-.nut .stat{display:block;text-align:left}
 .plow,.plow b{color:var(--high)}
 .bar{height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin:4px 0 3px;border:1px solid var(--line)}
 .bar i{display:block;height:100%}
@@ -808,9 +807,9 @@ function dayHTML(i,j){
   else if(st.gym.includes(i))tags.push('<span class="tag train">Palestra</span>');
   if(st.office&&st.office.day===i)tags.push('<span class="tag">Libero in ufficio</span>');
   if(st.free&&st.free.day===i)tags.push('<span class="tag">Pasto libero</span>');
+  if(!tags.length)tags.push('<span class="tag">Recupero</span>');
   const pct=k/tg;
   const cls=pct<.88?'st-low':pct>1.08?'st-high':'st-ok';
-  const stTxt=(pct<.88?'sotto obiettivo':pct>1.08?'sopra obiettivo':'in linea')+(x.libero?', pasto libero stimato':'');
   const dt=colDate(j);
   const today=isoLocal(new Date())===isoLocal(dt);
   return `<section class="day${today?' today':''}" aria-label="${DAYS[i]}">
@@ -819,7 +818,6 @@ function dayHTML(i,j){
       <div class="tags">${tags.join('')}</div></div>
       <div class="nut" title="${esc(targetNote(i))}">
         ${[['Energia',k,tg,'kcal',cls],...macroRows(x.t,mt)].map(r=>`<div class="mrow"><span>${r[0]} <b>${fmtN(r[1])}</b> / ${fmtN(r[2])} ${r[3]}</span><div class="bar" aria-hidden="true"><i class="${r[4]}" style="width:${Math.min(100,r[1]/r[2]*100).toFixed(0)}%"></i></div></div>`).join('')}
-        <span class="stat">kcal ${stTxt}</span>
       </div>
     </header>
     <div class="slots">${slotsOf(i).map(o=>slotHTML(i,o.k,o.wrapped?colDate(7):null)).join('')}</div>
