@@ -434,9 +434,11 @@ function colDate(j){const d=new Date(startInfo().date);d.setDate(d.getDate()+j);
 const colIndex=i=>(i-startInfo().dow+7)%7;
 function slotsOf(i){
   const si=SLOTS.indexOf(startInfo().slot);
-  if(colIndex(i)!==0||si<=0)return SLOTS.map(k=>({k,wrapped:false}));
-  return [...SLOTS.slice(si).map(k=>({k,wrapped:false})),...SLOTS.slice(0,si).map(k=>({k,wrapped:true}))];
+  if(colIndex(i)!==0||si<=0)return SLOTS.map(k=>({k}));
+  return SLOTS.slice(si).map(k=>({k}));
 }
+// se la settimana non parte dalla colazione, i primi pasti del giorno iniziale cadono a fine settimana: una voce a parte in coda
+function wrapSlots(){const si=SLOTS.indexOf(startInfo().slot);return si>0?SLOTS.slice(0,si).map(k=>({k})):[]}
 function seqPos(i,k){const j=colIndex(i),si=SLOTS.indexOf(startInfo().slot),ki=SLOTS.indexOf(k);return (j===0&&ki<si)?28+ki:j*4+ki}
 function dayDate(i){const j=colIndex(i);return colDate(j)}
 function longDate(d){return d.toLocaleDateString('it-IT',{day:'numeric',month:'long'})}
@@ -788,7 +790,7 @@ function renderPlan(){
     ${proteinTile()}
     <div class="tile tile-wide"><h3>Media giornaliera</h3><p><span class="big">${n?fmtN(sumK/n):'–'}</span> kcal, <b>${n?Math.round(sumP/n):'–'} g</b> proteine</p><p class="m">Pasti liberi compresi come stima. Obiettivo: 2.200 kcal, 2.375 nei giorni di allenamento, ${PROT_TARGET} g proteine. Grassi circa il 25% delle kcal, carboidrati il resto, fibre almeno ${FIBER_TARGET} g (stima). Nel giorno del pasto libero l'obiettivo sale, negli altri scende un po' per compensare.</p></div>
   </div>`;
-  const days=weekOrder().map((i,j)=>dayHTML(i,j)).join('');
+  const days=weekOrder().map((i,j)=>dayHTML(i,j)).join('')+(wrapSlots().length?dayHTML(weekOrder()[0],7,true):'');
   $('#panel-plan').innerHTML=`${tiles}
   <div class="boardbar no-print">
     <div class="actions"><button class="btn small" data-act="copy-plan">Copia piano</button><button class="btn small" data-act="export-keep-plan">Esporta per Google Keep</button></div>
@@ -800,7 +802,7 @@ function renderPlan(){
   <p class="foot">Kcal e proteine sono stime indicative sulle porzioni del piano: grammature a crudo, 150–180 g di proteina cotta, 200 g di verdura e un cucchiaio d'olio a pasto. Il cappuccino e gli extra non sono conteggiati.</p>`;
 }
 
-function dayHTML(i,j){
+function dayHTML(i,j,wrap){
   const st=S.settings,x=dayNut(i),tg=target(i),mt=macroTargets(i),k=x.t[0];
   const tags=[];
   if(i===6)tags.push('<span class="tag train">Corsa 10 km</span>');
@@ -820,7 +822,7 @@ function dayHTML(i,j){
         ${[['Energia',k,tg,'kcal',cls],...macroRows(x.t,mt)].map(r=>`<div class="mrow"><span>${r[0]} <b>${fmtN(r[1])}</b> / ${fmtN(r[2])} ${r[3]}</span><div class="bar" aria-hidden="true"><i class="${r[4]}" style="width:${Math.min(100,r[1]/r[2]*100).toFixed(0)}%"></i></div></div>`).join('')}
       </div>
     </header>
-    <div class="slots">${slotsOf(i).map(o=>slotHTML(i,o.k,o.wrapped?colDate(7):null)).join('')}</div>
+    <div class="slots">${(wrap?wrapSlots():slotsOf(i)).map(o=>slotHTML(i,o.k)).join('')}</div>
   </section>`;
 }
 
@@ -902,8 +904,12 @@ function planText(){
   let t=`Piano pasti, dal ${longDate(colDate(0))} (${SLOT_LABEL[startInfo().slot].toLowerCase()})\n`;
   weekOrder().forEach((i,j)=>{
     const dt=colDate(j);t+=`\n${DAYS[i]} ${dt.getDate()}/${dt.getMonth()+1}\n`;
-    slotsOf(i).forEach(o=>{const v=view(i,o.k,S.days[i][o.k]),f=slotFoods(i,o.k);t+=`  ${SLOT_LABEL[o.k]}${o.wrapped?' (fine settimana)':''}: ${v.t}\n`;if(f.items.length)t+=`    ${itemsLine(f.items)}\n    ${macroLine(f.items)}\n`});
+    slotsOf(i).forEach(o=>{const v=view(i,o.k,S.days[i][o.k]),f=slotFoods(i,o.k);t+=`  ${SLOT_LABEL[o.k]}: ${v.t}\n`;if(f.items.length)t+=`    ${itemsLine(f.items)}\n    ${macroLine(f.items)}\n`});
   });
+  if(wrapSlots().length){
+    const i=weekOrder()[0],dt=colDate(7);t+=`\n${DAYS[i]} ${dt.getDate()}/${dt.getMonth()+1}\n`;
+    wrapSlots().forEach(o=>{const v=view(i,o.k,S.days[i][o.k]),f=slotFoods(i,o.k);t+=`  ${SLOT_LABEL[o.k]}: ${v.t}\n`;if(f.items.length)t+=`    ${itemsLine(f.items)}\n    ${macroLine(f.items)}\n`});
+  }
   return t;
 }
 // solo gli articoli ancora da prendere, un elemento per riga: così Google Keep li separa in voci di checklist quando li incolli
@@ -919,6 +925,7 @@ function planTextKeep(){
     const dt=colDate(j);
     slotsOf(i).forEach(o=>{const v=view(i,o.k,S.days[i][o.k]);if(v.empty)return;lines.push(`${DAYS[i].slice(0,3)} ${dt.getDate()}/${dt.getMonth()+1} — ${SLOT_LABEL[o.k]}: ${v.t}`)});
   });
+  if(wrapSlots().length){const i=weekOrder()[0],dt=colDate(7);wrapSlots().forEach(o=>{const v=view(i,o.k,S.days[i][o.k]);if(v.empty)return;lines.push(`${DAYS[i].slice(0,3)} ${dt.getDate()}/${dt.getMonth()+1} — ${SLOT_LABEL[o.k]}: ${v.t}`)})}
   return lines.join('\n');
 }
 function openKeepExportGeneric(kind){
